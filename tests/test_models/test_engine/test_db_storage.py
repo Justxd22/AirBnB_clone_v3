@@ -18,6 +18,8 @@ import json
 import os
 import pep8
 import unittest
+import sys
+from io import StringIO
 DBStorage = db_storage.DBStorage
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
@@ -70,6 +72,20 @@ test_db_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Initializing classes."""
+        cls.dbstorage = DBStorage()
+        cls.output = StringIO()
+        sys.stdout = cls.output
+
+    @classmethod
+    def tearDownClass(cls):
+        """Delete variables."""
+        del cls.dbstorage
+        del cls.output
+
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_returns_dict(self):
         """Test that all returns a dictionaty"""
@@ -86,3 +102,21 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    def test_get_db_storage(self):
+        """This test for get method."""
+        new_state = State(name="Ohio")
+        models.storage.new(new_state)
+        first_state_id = list(models.storage.all("State").values())[0].id
+        self.assertEqual(type(models.storage.get("State", first_state_id)),
+                         State)
+
+    def test_count_db_storage(self):
+        """This test for get method."""
+        models.storage.reload()
+        result = models.storage.all(None)
+        count = models.storage.count(None)
+        self.assertEqual(len(result), count)
+        result = models.storage.all("State")
+        count = models.storage.count("State")
+        self.assertEqual(len(result), count)
