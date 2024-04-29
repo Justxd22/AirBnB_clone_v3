@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from models import storage
 from api.v1.views import app_views
