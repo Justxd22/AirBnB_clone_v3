@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+"""
+Init.
+"""
+
 from flask import Blueprint
 
 
