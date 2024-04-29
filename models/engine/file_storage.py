@@ -69,7 +69,7 @@ class FileStorage:
         """Method to retrieve one object."""
         d = self.all(cls)
         for key, val in d.items():
-            obj = cls + '.' + id
+            obj = str(cls) + '.' + id
             if key == obj:
                 return(val)
         return(None)
